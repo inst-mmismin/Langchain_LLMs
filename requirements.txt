@@ -1,0 +1,6 @@
+langchain
+openai
+huggingface_hub
+streamlit
+cohere
+google-cloud-aiplatform 
