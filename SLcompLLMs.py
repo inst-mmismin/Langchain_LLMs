@@ -37,7 +37,6 @@ def set_LLMs(prompt, temp=0.5, max_length=96, **submit_info):
     if submit_info['huggingface_api_key'] : 
         huggingface_api_key = submit_info['huggingface_api_key'] 
         for repo_id in submit_info['huggingface_repo_ids'] :
-            print(repo_id)
             llm = HuggingFaceHub(
                 repo_id=repo_id, model_kwargs={"temperature": temp, "max_length": max_length},
                 huggingfacehub_api_token = huggingface_api_key
@@ -110,8 +109,6 @@ with st.sidebar:
                     tfile.write(uploaded_file.read())
                     tfile_name = tfile.name
 
-                print('aaaa')
-
                 st.session_state.submit_info = {
                     'openai_api_key': openai_api_key,
                     'cohere_api_key': cohere_api_key,
@@ -120,7 +117,6 @@ with st.sidebar:
                     'huggingface_repo_ids': [r_id.strip() for r_id in huggingface_repo_ids.split(',')]
                 }
                 
-                print('bbb')
                 st.rerun()  
     else:
         st.markdown("<h4 style='text-align: center; color: black;'>제출됨!🤟</h4>", unsafe_allow_html=True)
