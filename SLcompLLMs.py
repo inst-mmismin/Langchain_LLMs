@@ -7,7 +7,7 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.llms import HuggingFaceHub
 
-def set_LLMs(prompt, temp=0.5, max_length=96, **submit_info):
+def set_LLMs(prompt, temp, max_length, **submit_info):
     LLMS = {}
     
     # openAI LLM 
@@ -96,8 +96,7 @@ with st.sidebar:
     st.markdown("4. HugginFace API : [링크](https://huggingface.co/settings/tokens)")
     st.markdown("5. HugginFace repo 찾기 : [링크](https://huggingface.co/models?pipeline_tag=text-generation&sort=trending)")
 
-    
-    st.header("API 정보 입력") 
+    st.header("API 정보 및 세팅 입력") 
     
     if not st.session_state.submitted:
         with st.form(key='api_form'):
@@ -108,6 +107,8 @@ with st.sidebar:
             huggingface_api_key = st.text_input("4. HuggingFace API Key", type="password")
             huggingface_repo_ids = st.text_input("5. HuggingFace Repo ID(,로 구분하기)", value="tiiuae/falcon-7b-instruct")
             
+            tmp = st.slider('temperature', min_value=0.0, max_value=1.0, value=0.1, step=0.1)
+            max_len = st.slider('최대 토큰 길이', min_value=4, max_value=200, value=128, step=1)
             
             submit_button = st.form_submit_button("제출하기!🙌")
             
@@ -121,6 +122,8 @@ with st.sidebar:
                     tfile_name = tfile.name
 
                 st.session_state.submit_info = {
+                    'temp': tmp,
+                    'max_length': max_len,
                     'openai_api_key': openai_api_key,
                     'cohere_api_key': cohere_api_key,
                     'google_application_credentials_file_path': tfile_name,
@@ -146,7 +149,7 @@ prompt = PromptTemplate(template=template, input_variables=["question"])
 
 start_button = st.button('시작하기!')
 if start_button : 
-    LLMS = set_LLMs(prompt, 0.1, 512, **st.session_state.submit_info)
+    LLMS = set_LLMs(prompt, **st.session_state.submit_info)
     RESULTS = run_LLMs(LLMS, question)
     show_results(RESULTS)
 
