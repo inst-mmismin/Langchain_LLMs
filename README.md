@@ -9,7 +9,11 @@
 pip install -r requirements.txt 
 ```
 
-## 실행 
+## 온라인 데모 
+
+https://langchainllms.streamlit.app/
+
+## 로컬 실행 
 
 ```
 streamlit run SLcompLLMs.py
