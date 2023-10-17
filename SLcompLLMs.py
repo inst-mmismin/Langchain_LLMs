@@ -37,20 +37,31 @@ def set_LLMs(prompt, temp=0.5, max_length=96, **submit_info):
     if submit_info['huggingface_api_key'] : 
         huggingface_api_key = submit_info['huggingface_api_key'] 
         for repo_id in submit_info['huggingface_repo_ids'] :
-            llm = HuggingFaceHub(
-                repo_id=repo_id, model_kwargs={"temperature": temp, "max_length": max_length},
-                huggingfacehub_api_token = huggingface_api_key
-            )
-            LLMS['huggingface_'+repo_id] = LLMChain(prompt=prompt, llm=llm)
+            try : 
+                llm = HuggingFaceHub(
+                    repo_id=repo_id, model_kwargs={"temperature": temp, "max_length": max_length},
+                    huggingfacehub_api_token = huggingface_api_key
+                )
+                chain = LLMChain(prompt=prompt, llm=llm)
+            except Exception as e : 
+                chain = e 
+            LLMS['huggingface_'+repo_id] = chain
     return LLMS
 
 def run_LLMs(LLMS, question):
     RESULTS = {} 
     for key, llm_chain in LLMS.items() : 
-        s = time.time()
-        model_name = key_LLMName.get(key, key)
-        res = llm_chain.run(question)
-        duration = time.time() - s
+        if not isinstance(llm_chain, Exception) : 
+            s = time.time()
+            model_name = key_LLMName.get(key, key)
+            res = llm_chain.run(question)
+            duration = time.time() - s
+
+        else : 
+            model_name = key_LLMName.get(key, key)
+            res = '''입력하신 Huggingface Repo ID가 잘못 입력되었거나, \n해당 repo에 접근 권한이 없는 것 같아요. 😭 \n아래는 에러 문구입니다.'''
+            res += '\n\n' + str(llm_chain)
+            duration = 0.0
         
         RESULTS.update({model_name : {'res': res, 'duration': duration}})
     return RESULTS
