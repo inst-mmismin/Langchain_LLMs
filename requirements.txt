@@ -5,4 +5,4 @@ streamlit
 cohere
 google-cloud-aiplatform 
 transformers
-pytorch
+torch
