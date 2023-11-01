@@ -99,7 +99,7 @@ if uploaded_image is not None:
     
     st.image(tfile.name, caption="다양한 사진을 올려주세요~!")
 
-    loader = ImageCaptionLoader(path_images=[tfile.name])
+    loader = ImageCaptionLoader(images=[tfile.name])
     question = loader.load()[0].page_content.replace(' [SEP]', '.')
     question_ko = translate(question, st.session_state.submit_info['deepl_api_key'])
 
