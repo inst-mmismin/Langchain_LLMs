@@ -1,6 +1,7 @@
 import time 
 import tempfile
 import streamlit as st
+import transformers
 
 from utils import key_LLMName
 from langchain.prompts import PromptTemplate
