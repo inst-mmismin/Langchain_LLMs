@@ -6,3 +6,6 @@ cohere
 google-cloud-aiplatform 
 transformers
 torch
+# faiss 
+faiss-cpu
+sentence-transformers
